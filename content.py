@@ -511,6 +511,7 @@ import pandas as pd
 import numpy as np
 from bson import json_util
 import json
+import os
 
 
 # -------------------- Flask Setup --------------------
@@ -518,7 +519,9 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # -------------------- MongoDB Connection --------------------
-client = MongoClient("mongodb+srv://ayesha:dRhXznyyTNous7EC@cluster0.af1kc.mongodb.net/SwapIt?retryWrites=true&w=majority")
+
+MONGO_URI = os.environ.get("MONGO_URI")
+client = MongoClient(MONGO_URI)
 db = client["SwapIt"]
 collection = db["MergedCollection"]
 
@@ -628,4 +631,6 @@ def get_recommendations():
 
 # -------------------- Server Runner --------------------
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5500, debug=True)
+    port = int(os.environ.get("PORT", 5500))
+    app.run(host="0.0.0.0", port=port)
+
